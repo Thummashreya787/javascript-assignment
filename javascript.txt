@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Functionality Webpage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result, #fullName, #age, #output, #personOutput, #arrayOutput {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .calc-container {
+            background-color: #e6f7ff;
+        }
+
+        .person-container {
+            background-color: #e6ffe6;
+        }
+
+        .array-container {
+            background-color: #fff2e6;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Simple Calculator -->
+    <div class="container calc-container">
+        <h1>Simple Calculator</h1>
+        <input type="number" id="calcNum1" placeholder="Enter first number">
+        <input type="text" id="calcOperator" placeholder="Enter operator (+, -, *, /)">
+        <input type="number" id="calcNum2" placeholder="Enter second number">
+        <button onclick="calculate()">Calculate</button>
+        <div id="result">Result: </div>
+    </div>
+
+    <!-- Person Object Functionality -->
+    <div class="container person-container">
+        <h1>Create a Person</h1>
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName"><br>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName"><br>
+        <label for="personAge">Age:</label>
+        <input type="number" id="personAge"><br>
+        <button onclick="createPerson()">Create Person</button>
+
+        <h2>Person Information</h2>
+        <pre id="personOutput"></pre>
+
+        <div id="incrementSection" style="display:none;">
+            <button onclick="incrementPersonAge()">Increment Age by 1</button>
+        </div>
+    </div>
+
+    <!-- Array Sum Calculator -->
+    <div class="container array-container">
+        <h1>Sum of Even Numbers</h1>
+        <input type="text" id="arrayInput" placeholder="Enter elements separated by commas">
+        <button onclick="submitArray()">Submit</button>
+        <div id="arrayOutput">Sum of even numbers: </div>
+    </div>
+
+    <script>
+        // Simple Calculator Functionality
+        function calculate() {
+            var num1 = parseFloat(document.getElementById('calcNum1').value);
+            var operator = document.getElementById('calcOperator').value;
+            var num2 = parseFloat(document.getElementById('calcNum2').value);
+            var result;
+
+            if (isNaN(num1) || isNaN(num2)) {
+                result = 'Please enter valid numbers.';
+            } else if (operator === '+') {
+                result = num1 + num2;
+            } else if (operator === '-') {
+                result = num1 - num2;
+            } else if (operator === '*') {
+                result = num1 * num2;
+            } else if (operator === '/') {
+                if (num2 !== 0) {
+                    result = num1 / num2;
+                } else {
+                    result = 'Cannot divide by zero.';
+                }
+            } else {
+                result = 'Please enter a valid operator (+, -, *, /).';
+            }
+
+            document.getElementById('result').innerText = 'Result: ' + result;
+        }
+
+        // Person Object Functionality
+        function Person(firstName, lastName, age) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.age = age;
+
+            this.getFullName = function() {
+                return this.firstName + ' ' + this.lastName;
+            };
+
+            this.incrementAge = function() {
+                this.age++;
+            };
+        }
+
+        function createPerson() {
+            var firstName = document.getElementById('firstName').value;
+            var lastName = document.getElementById('lastName').value;
+            var age = parseInt(document.getElementById('personAge').value);
+
+            if (firstName && lastName && !isNaN(age)) {
+                var person = new Person(firstName, lastName, age);
+                document.getElementById('personOutput').innerText = 'Full Name: ' + person.getFullName() + '\nAge: ' + person.age;
+                document.getElementById('incrementSection').style.display = 'block';
+
+                window.person = person; // Store person object globally for increment function
+            } else {
+                document.getElementById('personOutput').innerText = 'Please fill out all fields correctly.';
+                document.getElementById('incrementSection').style.display = 'none';
+            }
+        }
+
+        function incrementPersonAge() {
+            if (window.person) {
+                window.person.incrementAge();
+                document.getElementById('personOutput').innerText = 'Full Name: ' + window.person.getFullName() + '\nAge: ' + window.person.age;
+            }
+        }
+
+        // Array Sum Calculator Functionality
+        function submitArray() {
+            var input = document.getElementById('arrayInput').value;
+            var array = input.split(',');
+            var sum = 0;
+
+            for (var i = 0; i < array.length; i++) {
+                var number = parseInt(array[i].trim());
+                if (!isNaN(number) && number % 2 === 0) {
+                    sum += number;
+                }
+            }
+
+            document.getElementById('arrayOutput').innerText = 'Sum of even numbers: ' + sum;
+        }
+    </script>
+
+</body>
+</html>
